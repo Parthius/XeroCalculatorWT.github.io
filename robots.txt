@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://XeroCalculatorWT.github.io/sitemap.xml
