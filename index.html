@@ -24,7 +24,6 @@
   <meta name="twitter:description" content="ماشین حساب رایگان ایونت‌های War Thunder." />
   <meta name="twitter:image" content="images/og.png" />
 
-  <!-- آیکون تب مرورگر (Favicon) -->
   <link rel="icon" type="image/png" href="images/logo.png" />
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -52,32 +51,23 @@
         "name": "Xero Calculator چیست؟",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Xero Calculator یک ماشین حساب آنلاین و رایگان برای ایونت‌های بازی War Thunder است که با آن می‌توانید زمان مورد نیاز برای تکمیل استیج‌ها و کوپن‌ها را محاسبه کنید."
+          "text": "Xero Calculator یک ماشین حساب رایگان برای ایونت‌های بازی War Thunder است که هم به‌صورت آنلاین و هم آفلاین قابل استفاده است و با آن می‌توانید زمان مورد نیاز برای تکمیل استیج‌ها و کوپن‌ها را محاسبه کنید."
         }
       },
       {
         "@type": "Question",
         "name": "آیا استفاده از Xero Calculator رایگان است؟",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "بله، استفاده از این برنامه کاملاً رایگان است و نیازی به ثبت‌نام ندارد."
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": "بله، استفاده از این برنامه کاملاً رایگان است و نیازی به ثبت‌نام ندارد." }
       },
       {
         "@type": "Question",
         "name": "آیا برنامه نیاز به نصب دارد؟",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "خیر، برای اجرا کافی است فایل index.html را با مرورگر باز کنید."
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": "خیر. نسخه پرتابل Xero-Calculator-Portable را اجرا نمایید؛ بدون نیاز به نصب و بدون دردسر." }
       },
       {
         "@type": "Question",
         "name": "استیج ایونت چگونه محاسبه می‌شود؟",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "برنامه هدف هر استیج را بر ضریب Rank × Game Mode تقسیم می‌کند تا زمان لازم برای رسیدن به هدف مشخص شود."
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": "برنامه هدف هر استیج را بر ضریب Rank × Game Mode تقسیم می‌کند تا زمان لازم برای رسیدن به هدف مشخص شود." }
       }
     ]
   }
@@ -95,6 +85,8 @@
       --primary: #2ee59d;
       --primary-glow: rgba(46, 229, 157, 0.2);
       --primary-dark: #1fb777;
+      --accent-2: #22d3ee;
+      --accent-2-glow: rgba(34, 211, 238, 0.2);
       --shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
       --shadow-glow: 0 0 20px rgba(46, 229, 157, 0.15);
       --radius-card: 24px;
@@ -114,6 +106,8 @@
       --primary: #00b87c;
       --primary-glow: rgba(0, 184, 124, 0.2);
       --primary-dark: #009966;
+      --accent-2: #0891b2;
+      --accent-2-glow: rgba(8, 145, 178, 0.2);
       --shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
       --shadow-glow: 0 0 20px rgba(0, 184, 124, 0.2);
     }
@@ -132,6 +126,34 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
     svg { display: block; }
+
+    :focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-body); }
+    ::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--primary) 35%, transparent);
+      border-radius: 10px;
+      border: 2px solid var(--bg-body);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    html { scrollbar-color: color-mix(in srgb, var(--primary) 55%, transparent) var(--bg-body); scrollbar-width: thin; }
+
+    .stat .n, .countdown-timer .n, code, pre, .cl-ver { font-variant-numeric: tabular-nums; }
+
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-2));
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 100;
+      box-shadow: 0 0 12px var(--primary-glow);
+      will-change: transform;
+    }
 
     .bg-layer {
       position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
@@ -164,6 +186,13 @@
       background-image:
         linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    }
+
+    .noise {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -211,8 +240,15 @@
       padding: 14px clamp(16px, 4vw, 40px);
       background: color-mix(in srgb, var(--bg-body) 78%, transparent);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-color);
       animation: slideDown 0.8s ease both;
+      transition: padding 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    header.nav.shrunk {
+      padding-top: 8px; padding-bottom: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-bottom-color: color-mix(in srgb, var(--primary) 15%, var(--border-color));
     }
     @keyframes slideDown {
       from { transform: translateY(-100%); opacity: 0; }
@@ -220,11 +256,8 @@
     }
 
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
-    
     .brand .logo-img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
+      width: 36px; height: 36px; object-fit: contain;
       filter: drop-shadow(0 0 10px var(--primary-glow));
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
     }
@@ -233,14 +266,14 @@
       filter: drop-shadow(0 0 20px var(--primary-glow));
     }
 
-    .brand .pulse-dot {
+    .pulse-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: var(--primary);
       box-shadow: 0 0 8px var(--primary-glow);
       position: relative;
       margin-right: 2px;
     }
-    .brand .pulse-dot::after {
+    .pulse-dot::after {
       content: ''; position: absolute; inset: 0; border-radius: 50%;
       background: var(--primary);
       animation: pulse 2s ease-out infinite;
@@ -255,12 +288,12 @@
     .nav-links a::after {
       content: ""; position: absolute; right: 0; bottom: -2px;
       width: 0; height: 2px;
-      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      background: linear-gradient(90deg, var(--primary), var(--accent-2));
       transition: width var(--transition);
       box-shadow: 0 0 6px var(--primary-glow);
     }
-    .nav-links a:hover { color: var(--text-main); }
-    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
     .nav-actions { display: flex; align-items: center; gap: 10px; }
 
@@ -287,6 +320,34 @@
       to   { transform: rotate(0) scale(1); opacity: 1; }
     }
 
+    .menu-btn { display: none; }
+
+    .mobile-menu {
+      position: fixed; inset: 0; z-index: 99;
+      background: color-mix(in srgb, var(--bg-body) 96%, transparent);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .mobile-menu.open { opacity: 1; visibility: visible; }
+    .mobile-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .mobile-links {
+      padding: 16px 24px; display: flex; flex-direction: column;
+      overflow-y: auto;
+    }
+    .mobile-links a {
+      padding: 16px 0; font-size: 1.15rem; font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+      transition: color 0.2s, padding 0.2s;
+    }
+    .mobile-links a:hover { color: var(--primary); padding-inline-start: 6px; }
+
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 11px 22px; border-radius: var(--radius-pill);
@@ -309,7 +370,7 @@
       transform: translateX(-100%); transition: transform 0.7s;
     }
     .btn-primary:hover::before { transform: translateX(100%); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px var(--primary-glow); }
+    .btn-primary:hover { box-shadow: 0 14px 30px var(--primary-glow); }
     .btn-ghost {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -323,7 +384,6 @@
       box-shadow: var(--shadow), var(--shadow-glow);
     }
 
-    /* استایل دکمه شناور بازگشت به بالا */
     .scroll-top {
       position: fixed; left: 24px; bottom: 24px; z-index: 90;
       width: 54px; height: 54px; border-radius: 16px;
@@ -359,13 +419,18 @@
       max-width: 1200px; margin: 0 auto;
       padding: clamp(48px, 8vw, 110px) clamp(16px, 4vw, 40px) 60px;
       display: grid; grid-template-columns: 1.1fr 1fr; gap: 50px; align-items: center;
+      position: relative;
+      background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%),
+                  color-mix(in srgb, var(--primary) 7%, transparent), transparent 40%);
+      transition: background 0.15s ease-out;
     }
     .hero h1 {
       font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: 1.25; margin: 0 0 18px;
-      background: linear-gradient(135deg, var(--text-main) 20%, var(--primary) 100%);
+      background: linear-gradient(135deg, var(--text-main) 10%, var(--primary) 55%, var(--accent-2) 100%);
       background-size: 200% 100%;
       -webkit-background-clip: text; background-clip: text; color: transparent;
       animation: gradientShift 6s ease-in-out infinite;
+      text-wrap: balance;
     }
     @keyframes gradientShift {
       0%, 100% { background-position: 0% 50%; }
@@ -378,6 +443,34 @@
     }
     .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 
+    .hero-topline {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-topline .chip { margin-bottom: 0; }
+
+    .version-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+    .version-badge .vdot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 8px var(--accent-2);
+      position: relative;
+    }
+    .version-badge .vdot::after {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      background: var(--accent-2);
+      animation: pulse 2.4s ease-out infinite;
+    }
+    .version-badge .vsep { opacity: 0.4; }
+
     .hero-visual {
       position: relative; padding: 18px;
       transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
@@ -386,12 +479,33 @@
     .hero-visual:hover { transform: perspective(1200px) rotateY(0) rotateX(0); }
     .hero-visual .shot { aspect-ratio: 4/3; }
 
+    .trust-strip {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px) 60px;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
+    }
+    .trust-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+    .trust-chip::before {
+      content: '✓';
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
     section.block {
       max-width: 1200px; margin: 0 auto;
       padding: 70px clamp(16px, 4vw, 40px);
     }
     .section-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
-    .section-head h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin: 0 0 14px; }
+    .section-head h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin: 0 0 14px; text-wrap: balance; }
     .section-head p { color: var(--text-muted); margin: 0; }
 
     .chip {
@@ -497,13 +611,57 @@
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
     }
 
+    .changelog { display: grid; gap: 12px; max-width: 820px; margin: 0 auto; }
+    .cl-item { padding: 20px 24px; }
+    .cl-item:hover { transform: translateY(-2px); }
+    .cl-head {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .cl-ver { font-weight: 900; font-size: 1rem; color: var(--primary); direction: ltr; }
+    .cl-date { font-size: 0.82rem; color: var(--text-muted); }
+    .cl-tag {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 0.7rem; font-weight: 800;
+      margin-inline-start: auto;
+    }
+    .cl-tag.new {
+      color: var(--primary);
+      background: color-mix(in srgb, var(--primary) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .cl-tag.improve {
+      color: var(--accent-2);
+      background: color-mix(in srgb, var(--accent-2) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--accent-2) 30%, transparent);
+    }
+    .cl-item ul { list-style: none; padding: 0; margin: 0; }
+    .cl-item li {
+      padding: 6px 0;
+      padding-inline-start: 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      position: relative;
+    }
+    .cl-item li::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: 0;
+      top: 15px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 6px var(--primary-glow);
+    }
+
     .download {
       text-align: center; padding: 60px 30px;
       position: relative; overflow: hidden;
     }
     .download::before {
       content: ""; position: absolute; inset: -50%;
-      background: conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--primary) 18%, transparent), transparent 30%);
+      background: conic-gradient(from 0deg, transparent,
+        color-mix(in srgb, var(--primary) 18%, transparent),
+        transparent 30%);
       animation: rotateBg 12s linear infinite;
       pointer-events: none; z-index: 0;
     }
@@ -538,6 +696,9 @@
     }
     footer a { transition: color var(--transition); }
     footer a:hover { color: var(--primary); }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+    .footer-links a { display: inline-flex; align-items: center; gap: 6px; }
+    .footer-links svg { width: 16px; height: 16px; }
 
     .reveal {
       opacity: 0; transform: translateY(28px);
@@ -549,8 +710,10 @@
       .hero { grid-template-columns: 1fr; gap: 36px; text-align: center; }
       .hero p.lead { margin-inline: auto; }
       .hero-cta { justify-content: center; }
+      .hero-topline { justify-content: center; }
       .hero-visual { transform: none; }
       .nav-links { display: none; }
+      .menu-btn { display: grid; }
     }
     @media (max-width: 520px) {
       .step { grid-template-columns: 1fr; }
@@ -561,14 +724,17 @@
   </style>
 </head>
 <body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
   <div class="bg-layer" aria-hidden="true">
     <div class="orb a"></div>
     <div class="orb b"></div>
     <div class="orb c"></div>
     <div class="grid-overlay"></div>
+    <div class="noise"></div>
   </div>
 
-  <header class="nav">
+  <header class="nav" id="siteHeader">
     <a class="brand" href="#top">
       <img src="images/logo.png" alt="Xero Calculator Logo" class="logo-img" />
       <span class="brand-name">Xero Calculator</span>
@@ -578,6 +744,7 @@
       <a href="#features">امکانات</a>
       <a href="#screenshots">محیط کاربری</a>
       <a href="#tutorial">راهنما</a>
+      <a href="#changelog">تغییرات</a>
       <a href="#faq">سوالات</a>
     </nav>
     <div class="nav-actions">
@@ -588,6 +755,13 @@
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="4"/>
           <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="باز کردن منو">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
       <a class="btn btn-primary" href="#download">
@@ -601,24 +775,53 @@
     </div>
   </header>
 
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-bar">
+      <span class="brand-name" style="font-weight: 800;">Xero Calculator</span>
+      <button class="icon-btn" id="mobileClose" aria-label="بستن منو">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-links">
+      <a href="#features">امکانات</a>
+      <a href="#screenshots">محیط کاربری</a>
+      <a href="#tutorial">راهنما</a>
+      <a href="#changelog">تغییرات</a>
+      <a href="#faq">سوالات</a>
+      <a href="#download">دانلود</a>
+      <a href="https://live.warthunder.com/profile/persistent/tT2QPeayi/" target="_blank" rel="noopener">پروفایل WT Live ↗</a>
+    </nav>
+  </div>
+
   <div id="top"></div>
 
   <section class="hero">
     <div class="reveal">
-      <span class="chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-        </svg>
-        مخصوص ایونت‌های War Thunder
-      </span>
+      <div class="hero-topline">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+          </svg>
+          مخصوص ایونت‌های War Thunder
+        </span>
+        <span class="version-badge">
+          <span class="vdot"></span>
+          v2.0.0
+          <span class="vsep">·</span>
+          آپدیت ۲ روز پیش
+        </span>
+      </div>
       <h1>محاسبه‌ای دقیق،<br />بدون اتلاف وقت.</h1>
       <p class="lead">
-        <strong>Xero Calculator</strong> یک ماشین حساب رایگان و آنلاین برای ایونت‌های War Thunder است.
-        با آن می‌توانید زمان مورد نیاز برای تکمیل هر استیج و کوپن را به‌صورت دقیق محاسبه کنید —
-        بدون نیاز به نصب یا پیکربندی.
+        <strong>Xero Calculator</strong> یک ماشین حساب رایگان برای ایونت‌های War Thunder است که هم به‌صورت
+        <strong>آنلاین</strong> و هم <strong>آفلاین</strong> در اختیار شماست. با آن می‌توانید زمان مورد نیاز
+        برای تکمیل هر استیج و کوپن را به‌صورت دقیق محاسبه کنید — بدون نیاز به نصب یا پیکربندی.
       </p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#download">
+        <a class="btn btn-primary" href="#download" data-magnetic>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
             <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
@@ -650,6 +853,14 @@
       </div>
     </div>
   </section>
+
+  <!-- بج‌های اعتماد -->
+  <div class="trust-strip reveal">
+    <span class="trust-chip">Open Source</span>
+    <span class="trust-chip">MIT License</span>
+    <span class="trust-chip">No Tracking</span>
+    <span class="trust-chip">Offline Ready</span>
+  </div>
 
   <section class="block" id="features">
     <div class="section-head reveal">
@@ -709,12 +920,35 @@
       <article class="feature card reveal">
         <div class="ico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 3v18h18"/>
-            <path d="M7 14l4-4 4 4 5-5"/>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </div>
-        <h3>نمودار تجمعی</h3>
-        <p>پیشرفت خود را در طول ایونت با نمودار تجمعی Chart.js مشاهده کنید؛ با تغییر تم، نمودار دوباره رندر می‌شود.</p>
+        <h3>شخصی‌سازی برای هر فکشن</h3>
+        <p>محیط کاربری را متناسب با هر فکشن به دلخواه خود شخصی‌سازی کنید و تجربه‌ای منحصر‌به‌فرد از محاسبات داشته باشید.</p>
+      </article>
+
+      <article class="feature card reveal">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            <line x1="12" y1="12" x2="12" y2="16"/>
+          </svg>
+        </div>
+        <h3>چست‌های روزانه تصادفی</h3>
+        <p>هر روز چست‌های تصادفی دریافت کنید و از جوایز غیرمنتظره لذت ببرید؛ هیجان همیشه همراه شماست.</p>
+      </article>
+
+      <article class="feature card reveal">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <h3>محیطی موزیکال</h3>
+        <p>با موسیقی پس‌زمینه ملایم، تجربه‌ای آرامش‌بخش و دلنشین در حین محاسبات داشته باشید.</p>
       </article>
 
       <article class="feature card reveal">
@@ -725,8 +959,8 @@
             <line x1="17.5" y1="15" x2="9" y2="15"/>
           </svg>
         </div>
-        <h3>سبک و بدون نصب</h3>
-        <p>فقط فایل <code>index.html</code> را با مرورگر باز کنید. بدون نیاز به بیلد یا نصب.</p>
+        <h3>سبک و روان و بدون نصب</h3>
+        <p>فقط کافی است <code>Xero-Calculator-Portable</code> را اجرا نمایید؛ بدون نیاز به نصب، بدون دردسر و کاملاً روان.</p>
       </article>
     </div>
   </section>
@@ -781,7 +1015,7 @@
 
       <div class="shot-card card reveal">
         <div class="shot">
-          <img src="images/screenshot-3.png" alt="نمودار تجمعی پیشرفت ایونت" loading="lazy"
+          <img src="images/screenshot-3.png" alt="شخصی‌سازی محیط کاربری برای هر فکشن" loading="lazy"
                onerror="this.parentElement.classList.add('is-empty')" />
           <div class="shot-placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -792,8 +1026,8 @@
             <small style="opacity:.6">images/screenshot-3.png</small>
           </div>
         </div>
-        <h3>نمودار تجمعی</h3>
-        <p>مشاهده پیشرفت در طول ایونت با Chart.js.</p>
+        <h3>شخصی‌سازی فکشن</h3>
+        <p>محیط کاربری قابل شخصی‌سازی برای هر فکشن.</p>
       </div>
     </div>
   </section>
@@ -816,7 +1050,7 @@
         <div class="num">۱</div>
         <div>
           <h3>برنامه را اجرا کنید</h3>
-          <p>فایل <code>index.html</code> را با هر مرورگری (کروم، فایرفاکس، اج) باز کنید. اجرای اصلی نیاز به نصب یا اینترنت ندارد.</p>
+          <p>کافی است فایل <code>Xero-Calculator-Portable</code> را اجرا نمایید؛ نسخه پرتابل بدون نیاز به نصب روی هر مرورگری (کروم، فایرفاکس، اج) اجرا می‌شود.</p>
         </div>
       </div>
       <div class="step card reveal">
@@ -850,8 +1084,8 @@
       <div class="step card reveal">
         <div class="num">۶</div>
         <div>
-          <h3>تم و نمودار</h3>
-          <p>با دکمه تم بین دارک و لایت جابه‌جا شوید؛ انتخاب شما ذخیره می‌شود. نمودار تجمعی نیز پیشرفت را در طول ایونت نشان می‌دهد.</p>
+          <h3>تم، فکشن و نمودار</h3>
+          <p>با دکمه تم بین دارک و لایت جابه‌جا شوید؛ محیط کاربری را برای فکشن دلخواه خود شخصی‌سازی کنید. انتخاب شما ذخیره می‌شود و نمودار تجمعی نیز پیشرفت را در طول ایونت نشان می‌دهد.</p>
         </div>
       </div>
     </div>
@@ -884,12 +1118,63 @@
     </div>
   </section>
 
+  <section class="block" id="changelog">
+    <div class="section-head reveal">
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        تاریخچه
+      </span>
+      <h2>آخرین تغییرات</h2>
+      <p>هر نسخه چه چیز جدیدی به همراه داشته است.</p>
+    </div>
+
+    <div class="changelog">
+      <div class="cl-item card reveal">
+        <div class="cl-head">
+          <span class="cl-ver">v2.0.0</span>
+          <span class="cl-date">۱۴۰۵/۰۸/۲۷</span>
+          <span class="cl-tag new">جدید</span>
+        </div>
+        <ul>
+          <li>شخصی‌سازی محیط کاربری برای هر فکشن</li>
+          <li>چست‌های روزانه تصادفی با جوایز غیرمنتظره</li>
+          <li>محیط موزیکال آرامش‌بخش در حین محاسبات</li>
+        </ul>
+      </div>
+      <div class="cl-item card reveal">
+        <div class="cl-head">
+          <span class="cl-ver">v1.5.0</span>
+          <span class="cl-date">۱۴۰۵/۰۸/۱۵</span>
+          <span class="cl-tag improve">بهبود</span>
+        </div>
+        <ul>
+          <li>انتشار نسخه پرتابل Xero-Calculator-Portable</li>
+          <li>پشتیبانی کامل آفلاین و آنلاین</li>
+        </ul>
+      </div>
+      <div class="cl-item card reveal">
+        <div class="cl-head">
+          <span class="cl-ver">v1.0.0</span>
+          <span class="cl-date">۱۴۰۵/۰۷/۲۰</span>
+          <span class="cl-tag new">انتشار</span>
+        </div>
+        <ul>
+          <li>انتشار اولیه برنامه</li>
+          <li>محاسبه دقیق استیج و کوپن ایونت</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section class="block" id="download">
     <div class="download card reveal">
       <h2>آماده شروع هستید؟</h2>
       <p>Xero Calculator رایگان است، نیازی به ثبت‌نام ندارد و روی هر مرورگری اجرا می‌شود.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="https://github.com/XeroCalculatorWT/XeroCalculatorWT.github.io/releases/latest" target="_blank" rel="noopener">
+        <a class="btn btn-primary" href="https://github.com/XeroCalculatorWT/XeroCalculatorWT.github.io/releases/latest" target="_blank" rel="noopener" data-magnetic>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -916,7 +1201,7 @@
     <div class="faq">
       <details class="faq-item card reveal">
         <summary>Xero Calculator چیست؟</summary>
-        <p>یک ماشین حساب آنلاین و رایگان برای ایونت‌های بازی War Thunder است که با آن می‌توانید زمان مورد نیاز برای تکمیل استیج‌ها و کوپن‌ها را محاسبه کنید.</p>
+        <p>یک ماشین حساب رایگان برای ایونت‌های بازی War Thunder است که هم به‌صورت آنلاین و هم آفلاین قابل استفاده است و با آن می‌توانید زمان مورد نیاز برای تکمیل استیج‌ها و کوپن‌ها را محاسبه کنید.</p>
       </details>
       <details class="faq-item card reveal">
         <summary>آیا استفاده از برنامه رایگان است؟</summary>
@@ -924,7 +1209,7 @@
       </details>
       <details class="faq-item card reveal">
         <summary>آیا برنامه نیاز به نصب دارد؟</summary>
-        <p>خیر. برای اجرا کافی است فایل <code>index.html</code> را با مرورگر باز کنید. بدون نیاز به بیلد یا نصب.</p>
+        <p>خیر. نسخه پرتابل <code>Xero-Calculator-Portable</code> را اجرا نمایید؛ بدون نیاز به نصب و بدون دردسر.</p>
       </details>
       <details class="faq-item card reveal">
         <summary>استیج ایونت چگونه محاسبه می‌شود؟</summary>
@@ -939,9 +1224,20 @@
 
   <footer>
     <div>© <span id="year"></span> Xero Calculator — طراحی شده برای جامعه War Thunder</div>
-    <div style="display:flex; gap:18px; flex-wrap:wrap;">
-      <!-- خط مربوط به "بازگشت به بالا" از اینجا حذف شد -->
-      <a href="https://github.com/XeroCalculatorWT" target="_blank" rel="noopener">گیت‌هاب</a>
+    <div class="footer-links">
+      <a href="https://github.com/XeroCalculatorWT" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+        </svg>
+        گیت‌هاب
+      </a>
+      <a href="https://live.warthunder.com/profile/persistent/tT2QPeayi/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+          <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+        </svg>
+        پروفایل WT Live
+      </a>
     </div>
   </footer>
 
@@ -953,6 +1249,7 @@
   </button>
 
   <script>
+    /* ============ تم ============ */
     const root = document.documentElement;
     const themeBtn = document.getElementById('themeToggle');
     const saved = localStorage.getItem('xero-theme') || 'dark';
@@ -974,8 +1271,35 @@
       themeBtn.classList.add('spin');
     });
 
+    /* ============ سال ============ */
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    /* ============ نوار پیشرفت اسکرول ============ */
+    const progress = document.querySelector('.scroll-progress');
+    const updateProgress = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      const p = h > 0 ? window.scrollY / h : 0;
+      progress.style.transform = `scaleX(${p})`;
+    };
+
+    /* ============ هدر کوچک‌شونده ============ */
+    const header = document.getElementById('siteHeader');
+    const onScrollHeader = () => {
+      header.classList.toggle('shrunk', window.scrollY > 40);
+    };
+
+    /* ============ دکمه بازگشت به بالا ============ */
+    const scrollBtn = document.getElementById('scrollTop');
+
+    /* ============ اسکرول: ترکیب همه ============ */
+    const onScrollCombined = () => {
+      updateProgress();
+      onScrollHeader();
+      scrollBtn.classList.toggle('show', window.scrollY > 320);
+    };
+    window.addEventListener('scroll', onScrollCombined, { passive: true });
+
+    /* ============ Reveal ============ */
     const groups = new Map();
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -989,9 +1313,9 @@
         }
       });
     }, { threshold: 0.12 });
-
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+    /* ============ افکت موس روی کارت‌ها ============ */
     document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -1000,16 +1324,75 @@
       });
     });
 
-    const scrollBtn = document.getElementById('scrollTop');
-    const onScroll = () => {
-      scrollBtn.classList.toggle('show', window.scrollY > 320);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    /* ============ اسپات‌لایت hero ============ */
+    const heroEl = document.querySelector('.hero');
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      heroEl.addEventListener('mousemove', (e) => {
+        const r = heroEl.getBoundingClientRect();
+        heroEl.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        heroEl.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    }
 
+    /* ============ دکمه‌های مگنتیک ============ */
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('[data-magnetic]').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * 0.15;
+          const y = (e.clientY - r.top - r.height / 2) * 0.15;
+          btn.style.transform = `translate(${x}px, ${y}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = '';
+        });
+      });
+    }
+
+    /* ============ لینک فعال در منو ============ */
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = [...navLinks]
+      .map(a => document.querySelector(a.getAttribute('href')))
+      .filter(Boolean);
+    const activeIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = '#' + e.target.id;
+          navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(s => activeIO.observe(s));
+
+    /* ============ منوی موبایل ============ */
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    const openMenu = () => {
+      mobileMenu.classList.add('open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    const closeMenu = () => {
+      mobileMenu.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    menuBtn.addEventListener('click', openMenu);
+    mobileClose.addEventListener('click', closeMenu);
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    /* ============ دکمه بازگشت به بالا (رویداد) ============ */
     scrollBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    /* ============ اجرای اولیه ============ */
+    onScrollCombined();
   </script>
 </body>
 </html> 
